@@ -13,15 +13,20 @@ class App(tk.Tk):
         self.ent_count = tk.Entry(self.fr_menu)
         self.btn_generate = tk.Button(self.fr_menu, text="Сгенерировать")
         self.btn_generate.bind("<Button-1>", self.run_generate_line)
-        self.lbl_others = tk.Label(self.fr_menu, text="Другое")
+        self.lbl_algo = tk.Label(self.fr_menu, text="Этапы генерализации")
+        self.to_smooth = tk.IntVar()
+        self.cb_smoothing = tk.Checkbutton(self.fr_menu, text="Сгладить", variable=self.to_smooth,
+                                           command=self.run_main_algo)
         self.need_polygon = tk.IntVar()
-        self.cb_polygon = tk.Checkbutton(self.fr_menu, text="Залить", variable=self.need_polygon, command=self.fill_polyline)
+        self.cb_polygon = tk.Checkbutton(self.fr_menu, text="Залить", variable=self.need_polygon,
+                                         command=self.fill_polyline)
 
         self.lbl_count.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
         self.ent_count.grid(row=1, column=0, sticky="ew", padx=5)
         self.btn_generate.grid(row=2, column=0, sticky="ew", padx=5)
-        self.lbl_others.grid(row=3, column=0, sticky="ew", padx=5, pady=5)
-        self.cb_polygon.grid(row=4, column=0, sticky="ew", padx=5, pady=10)
+        self.lbl_algo.grid(row=3, column=0, sticky="ew", padx=5, pady=5)
+        self.cb_smoothing.grid(row=4, column=0, sticky="ew", padx=5, pady=10)
+        self.cb_polygon.grid(row=5, column=0, sticky="ew", padx=5, pady=10)
 
         self.fr_menu.grid(row=0, column=0, sticky="ns")
         self.cvs_graphics.grid(row=0, column=1, sticky="nsew")
@@ -30,18 +35,25 @@ class App(tk.Tk):
 
     def run_generate_line(self, event):
         self.need_polygon.set(0)
+        self.to_smooth.set(0)
         self.cvs_graphics.delete("all")
         self.main_line = generate_line(int(self.ent_count.get()))
         self.main_line.draw(self.cvs_graphics)
 
     def fill_polyline(self):
-        if self.need_polygon.get() % 2 == 0:
-            self.cvs_graphics.delete("all")
-            self.main_line.draw(self.cvs_graphics)
+        if self.need_polygon.get() == 0:
+            self.run_main_algo()
         else:
             polygon = copy.deepcopy(self.main_line.polyline)
             polygon.append([self.main_line.min_x, self.main_line.max_y])
             self.cvs_graphics.create_polygon(polygon, outline="black", fill="black", width=2)
+
+    def run_main_algo(self):
+        self.cvs_graphics.delete("all")
+        self.main_line.draw(self.cvs_graphics)
+        if self.to_smooth.get() != 0:
+            smoothed = smoothed_polyline(self.main_line)
+            smoothed.draw(self.cvs_graphics)
 
 
 if __name__ == '__main__':

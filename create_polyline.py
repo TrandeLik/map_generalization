@@ -1,6 +1,7 @@
 from polyline import Polyline
 import random
 import math
+import copy
 from geometry import *
 
 MIN_X = 100
@@ -42,3 +43,13 @@ def generate_line(count):
     main_line.update_limits()
     return main_line
 
+
+def smoothed_polyline(polyline):
+    smoothed = Polyline("red", polyline.elements_count)
+    smoothed.polyline.append(copy.deepcopy(polyline.polyline[0]))
+    for i in range(1, polyline.elements_count - 1):
+        x = (polyline.polyline[i - 1][0] + 4 * polyline.polyline[i][0] + polyline.polyline[i + 1][0]) / 6
+        y = (polyline.polyline[i - 1][1] + 4 * polyline.polyline[i][1] + polyline.polyline[i + 1][1]) / 6
+        smoothed.polyline.append([x, y])
+    smoothed.polyline.append(copy.deepcopy(polyline.polyline[polyline.elements_count - 1]))
+    return smoothed
