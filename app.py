@@ -1,6 +1,6 @@
 import copy
 import tkinter as tk
-from generate import *
+from create_polyline import *
 
 
 class App(tk.Tk):

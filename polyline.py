@@ -1,3 +1,6 @@
+from geometry import *
+
+
 class Polyline:
     def __init__(self, color, elements_count):
         self.color = color
@@ -18,3 +21,10 @@ class Polyline:
         self.min_y = self.polyline[0][1]
         self.max_x = self.polyline[self.elements_count - 1][0]
         self.max_y = self.polyline[self.elements_count - 1][1]
+
+    def step(self, c):
+        d_in = 0
+        for i in range(self.elements_count - 1):
+            d_in += distance(self.polyline[i], self.polyline[i - 1])
+        d_in /= self.elements_count - 1
+        return c * d_in
