@@ -3,22 +3,16 @@ import random
 import math
 import copy
 from geometry import *
-
-MIN_X = 100
-MIN_Y = 100
-MAX_X = 1400
-MAX_Y = 1200
-C = 0.5
-GENERATION_COEF = 0.25
+from algorithm_params import params
 
 
 def generate(arr, max_depth, current, a_x, a_y, b_x, b_y):
     if current == max_depth:
         return
     current += 1
-    delta_x = int(GENERATION_COEF * (max(a_x, b_x) - min(a_x, b_x)))
+    delta_x = int(params.GENERATION_RATIO * (max(a_x, b_x) - min(a_x, b_x)))
     c_x = random.randint(min(a_x, b_x) + delta_x, max(a_x, b_x) - delta_x)
-    delta_y = int(GENERATION_COEF * (max(a_y, b_y) - min(a_y, b_y)))
+    delta_y = int(params.GENERATION_RATIO * (max(a_y, b_y) - min(a_y, b_y)))
     c_y = random.randint(min(a_y, b_y) + delta_y, max(a_y, b_y) - delta_y)
     arr.append([c_x, c_y])
     generate(arr, max_depth, current, c_x, c_y, b_x, b_y)
@@ -28,9 +22,9 @@ def generate(arr, max_depth, current, a_x, a_y, b_x, b_y):
 def generate_line(count):
     height = int(math.log2(count)) + 1
     main_line = Polyline("black", count, 3)
-    main_line.polyline.append([MIN_X, MIN_Y])
-    main_line.polyline.append([MAX_X, MAX_Y])
-    generate(main_line.polyline, height, 0, MIN_X, MIN_Y, MAX_X, MAX_Y)
+    main_line.polyline.append([params.MIN_X, params.MIN_Y])
+    main_line.polyline.append([params.MAX_X, params.MAX_Y])
+    generate(main_line.polyline, height, 0, params.MIN_X, params.MIN_Y, params.MAX_X, params.MAX_Y)
     main_line.polyline.sort(key=lambda x: x[0])
     n = len(main_line.polyline)
     dist = [[0, i] for i in range(n)]
@@ -47,7 +41,7 @@ def generate_line(count):
 def equidistant_polyline(polyline):
     equidistant = Polyline("green", polyline.elements_count, 3)
     equidistant.polyline.append(copy.deepcopy(polyline.polyline[0]))
-    r = polyline.step(C)
+    r = polyline.step(params.C)
     current_center_pos = 0
     current_segment_number = 1
     corresponding_segment = 1
@@ -62,7 +56,7 @@ def equidistant_polyline(polyline):
             if corresponding_segment == current_segment_number:
                 d1 = distance(contenders[0], polyline.polyline[current_segment_number - 1])
                 d2 = distance(equidistant.polyline[current_center_pos], polyline.polyline[current_segment_number - 1])
-                if d1 > d2 + EPS:
+                if d1 > d2 + params.EPS:
                     equidistant.polyline.append(copy.deepcopy(contenders[0]))
                     current_center_pos += 1
                 else:
@@ -74,18 +68,23 @@ def equidistant_polyline(polyline):
         if len(contenders) == 2:
             d1 = distance(contenders[0], polyline.polyline[current_segment_number - 1])
             d2 = distance(contenders[1], polyline.polyline[current_segment_number - 1])
-            if d1 > d2 + EPS:
+            if d1 > d2 + params.EPS:
                 equidistant.polyline.append(copy.deepcopy(contenders[0]))
             else:
                 equidistant.polyline.append(copy.deepcopy(contenders[1]))
             current_center_pos += 1
             corresponding_segment = current_segment_number
 
-    if distance(equidistant.polyline[current_center_pos], polyline.polyline[polyline.elements_count - 1]) > EPS:
+    if distance(equidistant.polyline[current_center_pos], polyline.polyline[polyline.elements_count - 1]) > params.EPS:
         equidistant.polyline.append(copy.deepcopy(polyline.polyline[polyline.elements_count - 1]))
 
     equidistant.elements_count = len(equidistant.polyline)
     return equidistant
+
+
+def make_segmentation(polyline, n):
+    _, segmentation = polyline.split(n)
+    return segmentation
 
 
 def smoothed_polyline(polyline):

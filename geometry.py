@@ -1,4 +1,4 @@
-EPS = 1e-8
+from algorithm_params import params
 
 
 def distance(a, b):
@@ -19,9 +19,9 @@ def move_center(dot, new_center):
 def intersection_of_circle_and_line_centered(r, a, b, c):
     x0 = -a * c / (a * a + b * b)
     y0 = -b * c / (a * a + b * b)
-    if c * c > r * r * (a * a + b * b) + EPS:
+    if c * c > r * r * (a * a + b * b) + params.EPS:
         return []
-    if abs(c * c - r * r * (a * a + b * b)) < EPS:
+    if abs(c * c - r * r * (a * a + b * b)) < params.EPS:
         return [[x0, y0]]
     d = r * r - c * c / (a * a + b * b)
     mult = (d / (a * a + b * b)) ** 0.5
@@ -39,6 +39,6 @@ def intersection_of_circle_and_segment(centre, r, p, q):
     intersection_points = intersection_of_circle_and_line_centered(r, a, b, c)
     result = []
     for dot in intersection_points:
-        if min(p_new[0], q_new[0]) - EPS <= dot[0] <= max(p_new[0], q_new[0]) + EPS and min(p_new[1], q_new[1]) - EPS <= dot[1] <= max(p_new[1], q_new[1]) + EPS:
+        if min(p_new[0], q_new[0]) - params.EPS <= dot[0] <= max(p_new[0], q_new[0]) + params.EPS and min(p_new[1], q_new[1]) - params.EPS <= dot[1] <= max(p_new[1], q_new[1]) + params.EPS:
             result.append(move_center(dot, [-centre[0], -centre[1]]))
     return result

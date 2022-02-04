@@ -1,6 +1,6 @@
-import copy
 import tkinter as tk
 from create_polyline import *
+from algorithm_params import params
 
 
 class App(tk.Tk):
@@ -17,6 +17,9 @@ class App(tk.Tk):
         self.to_equidistant = tk.IntVar()
         self.cb_equidistant = tk.Checkbutton(self.fr_menu, text="Привести к равнозвенной", variable=self.to_equidistant,
                                              command=self.run_main_algo)
+        self.to_make_segmentation = tk.IntVar()
+        self.cb_segmentation = tk.Checkbutton(self.fr_menu, text="Сегментировать", variable=self.to_make_segmentation,
+                                              command=self.run_main_algo)
         self.to_smooth = tk.IntVar()
         self.cb_smoothing = tk.Checkbutton(self.fr_menu, text="Сгладить", variable=self.to_smooth,
                                            command=self.run_main_algo)
@@ -29,8 +32,9 @@ class App(tk.Tk):
         self.btn_generate.grid(row=2, column=0, sticky="ew", padx=5)
         self.lbl_algo.grid(row=3, column=0, sticky="ew", padx=5, pady=5)
         self.cb_equidistant.grid(row=4, column=0, sticky="ew", padx=5, pady=10)
-        self.cb_smoothing.grid(row=5, column=0, sticky="ew", padx=5, pady=10)
-        self.cb_polygon.grid(row=6, column=0, sticky="ew", padx=5, pady=10)
+        self.cb_segmentation.grid(row=5, column=0, sticky="ew", padx=5, pady=10)
+        self.cb_smoothing.grid(row=6, column=0, sticky="ew", padx=5, pady=10)
+        self.cb_polygon.grid(row=7, column=0, sticky="ew", padx=5, pady=10)
 
         self.fr_menu.grid(row=0, column=0, sticky="ns")
         self.cvs_graphics.grid(row=0, column=1, sticky="nsew")
@@ -41,6 +45,7 @@ class App(tk.Tk):
         self.need_polygon.set(0)
         self.to_smooth.set(0)
         self.to_equidistant.set(0)
+        self.to_make_segmentation.set(0)
         self.cvs_graphics.delete("all")
         self.main_line = generate_line(int(self.ent_count.get()))
         self.main_line.draw(self.cvs_graphics)
@@ -58,11 +63,15 @@ class App(tk.Tk):
         self.cvs_graphics.delete("all")
         self.main_line.draw(self.cvs_graphics)
         equidistant = equidistant_polyline(self.main_line)
+        segmentation = make_segmentation(equidistant, params.N_INIT)
         smoothed = smoothed_polyline(equidistant)
         if self.to_equidistant.get() != 0:
             equidistant.draw(self.cvs_graphics)
         if self.to_smooth.get() != 0:
             smoothed.draw(self.cvs_graphics)
+        if self.to_make_segmentation.get() != 0:
+            for segment in segmentation:
+                segment.draw(self.cvs_graphics)
 
 
 if __name__ == '__main__':
