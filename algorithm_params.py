@@ -12,6 +12,7 @@ class AlgoParams:
         self.F = 0.5
         self.EPS = 1e-8
         self.DIGITS_COUNT = 6
+        self.h = 20
 
 
 params = AlgoParams()

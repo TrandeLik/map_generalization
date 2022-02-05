@@ -1,3 +1,4 @@
+import copy
 import tkinter as tk
 from create_polyline import *
 from algorithm_params import params
@@ -20,6 +21,9 @@ class App(tk.Tk):
         self.to_make_segmentation = tk.IntVar()
         self.cb_segmentation = tk.Checkbutton(self.fr_menu, text="Сегментировать", variable=self.to_make_segmentation,
                                               command=self.run_main_algo)
+        self.to_simplify = tk.IntVar()
+        self.cb_simplify = tk.Checkbutton(self.fr_menu, text="Упростить", variable=self.to_simplify,
+                                          command=self.run_main_algo)
         self.to_smooth = tk.IntVar()
         self.cb_smoothing = tk.Checkbutton(self.fr_menu, text="Сгладить", variable=self.to_smooth,
                                            command=self.run_main_algo)
@@ -33,8 +37,9 @@ class App(tk.Tk):
         self.lbl_algo.grid(row=3, column=0, sticky="ew", padx=5, pady=5)
         self.cb_equidistant.grid(row=4, column=0, sticky="ew", padx=5, pady=10)
         self.cb_segmentation.grid(row=5, column=0, sticky="ew", padx=5, pady=10)
-        self.cb_smoothing.grid(row=6, column=0, sticky="ew", padx=5, pady=10)
-        self.cb_polygon.grid(row=7, column=0, sticky="ew", padx=5, pady=10)
+        self.cb_simplify.grid(row=6, column=0, sticky="ew", padx=5, pady=10)
+        self.cb_smoothing.grid(row=7, column=0, sticky="ew", padx=5, pady=10)
+        self.cb_polygon.grid(row=8, column=0, sticky="ew", padx=5, pady=10)
 
         self.fr_menu.grid(row=0, column=0, sticky="ns")
         self.cvs_graphics.grid(row=0, column=1, sticky="nsew")
@@ -46,6 +51,7 @@ class App(tk.Tk):
         self.to_smooth.set(0)
         self.to_equidistant.set(0)
         self.to_make_segmentation.set(0)
+        self.to_simplify.set(0)
         self.cvs_graphics.delete("all")
         self.main_line = generate_line(int(self.ent_count.get()))
         self.main_line.draw(self.cvs_graphics)
@@ -64,7 +70,8 @@ class App(tk.Tk):
         self.main_line.draw(self.cvs_graphics)
         equidistant = equidistant_polyline(self.main_line)
         segmentation = make_segmentation(equidistant, params.N_INIT, params.N_P, params.N_S, params.F)
-        smoothed = smoothed_polyline(equidistant)
+        simplified = simplify(copy.deepcopy(segmentation), params.h)
+        smoothed = smoothed_polyline(simplified)
         if self.to_equidistant.get() != 0:
             equidistant.draw(self.cvs_graphics)
         if self.to_smooth.get() != 0:
@@ -72,6 +79,8 @@ class App(tk.Tk):
         if self.to_make_segmentation.get() != 0:
             for segment in segmentation:
                 segment.draw(self.cvs_graphics)
+        if self.to_simplify.get() != 0:
+            simplified.draw(self.cvs_graphics)
 
 
 if __name__ == '__main__':

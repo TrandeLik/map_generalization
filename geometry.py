@@ -42,3 +42,21 @@ def intersection_of_circle_and_segment(centre, r, p, q):
         if min(p_new[0], q_new[0]) - params.EPS <= dot[0] <= max(p_new[0], q_new[0]) + params.EPS and min(p_new[1], q_new[1]) - params.EPS <= dot[1] <= max(p_new[1], q_new[1]) + params.EPS:
             result.append(move_center(dot, [-centre[0], -centre[1]]))
     return result
+
+
+def distance_between_dot_and_line(dot, a, b, c):
+    return abs(a * dot[0] + b * dot[1] + c) / ((a * a + b * b) ** 0.5)
+
+
+def douglas_packer_algorithm(dots, h, first, second):
+    dots[first][2] = True
+    dots[second][2] = True
+    max_dist_idx = first
+    a, b, c = line_equation(dots[first], dots[second])
+    for i in range(first, second):
+        if distance_between_dot_and_line(dots[i], a, b, c) > distance_between_dot_and_line(dots[max_dist_idx], a, b, c) + params.EPS:
+            max_dist_idx = i
+    if distance_between_dot_and_line(dots[max_dist_idx], a, b, c) > h + params.EPS:
+        douglas_packer_algorithm(dots, h, first, max_dist_idx)
+        douglas_packer_algorithm(dots, h, max_dist_idx, second)
+    return dots

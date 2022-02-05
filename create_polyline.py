@@ -98,10 +98,18 @@ def make_segmentation(polyline, n, n_p, n_s, f):
         segmentation.pop(min_ch_diff_idx + 1)
         min_len_index = 0
         for i in range(len(segmentation)):
-            print(len(segmentation[i].polyline))
             if len(segmentation[i].polyline) < len(segmentation[min_len_index].polyline):
                 min_len_index = i
     return segmentation
+
+
+def simplify(segments, h):
+    for segment in segments:
+        segment.simplify(h)
+    for i in range(1, len(segments)):
+        segments[0].merge(segments[i], 0)
+    segments[0].color = "orange"
+    return segments[0]
 
 
 def smoothed_polyline(polyline):

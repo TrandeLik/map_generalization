@@ -87,3 +87,13 @@ class Polyline:
             splitted.pop(1)
         return splitted
 
+    def simplify(self, h):
+        dots = []
+        for dot in self.polyline:
+            dots.append([dot[0], dot[1], False])
+        updated_dots = douglas_packer_algorithm(dots, h, 0, len(dots) - 1)
+        self.polyline = []
+        for dot in updated_dots:
+            if dot[2]:
+                self.polyline.append([dot[0], dot[1]])
+        self.elements_count = len(self.polyline)
