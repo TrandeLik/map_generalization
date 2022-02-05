@@ -1,4 +1,5 @@
 from algorithm_params import params
+import numpy as np
 
 
 def distance(a, b):
@@ -60,3 +61,14 @@ def douglas_packer_algorithm(dots, h, first, second):
         douglas_packer_algorithm(dots, h, first, max_dist_idx)
         douglas_packer_algorithm(dots, h, max_dist_idx, second)
     return dots
+
+
+def least_square_method(dots):
+    a = np.zeros(len(dots))
+    b = np.zeros(len(dots))
+    for i in range(len(dots)):
+        a[i] = dots[i][0]
+        b[i] = dots[i][1]
+    a = np.vstack([a, np.ones(len(a))]).T
+    k, _ = np.linalg.lstsq(a, b, rcond=None)[0]
+    return k
