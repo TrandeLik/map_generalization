@@ -82,8 +82,25 @@ def equidistant_polyline(polyline):
     return equidistant
 
 
-def make_segmentation(polyline, n):
-    _, segmentation = polyline.split(n)
+def make_segmentation(polyline, n, n_p, n_s, f):
+    segmentation = polyline.split(n)
+    min_len_index = 0
+    for i in range(len(segmentation)):
+        segmentation[i].update_integral_characteristic(f)
+        if len(segmentation[i].polyline) < len(segmentation[min_len_index].polyline):
+            min_len_index = i
+    while len(segmentation[min_len_index].polyline) < n_p or len(segmentation) > n_s:
+        min_ch_diff_idx = 0
+        for i in range(len(segmentation) - 1):
+            if abs(segmentation[i].integral_characteristic - segmentation[i + 1].integral_characteristic) < abs(segmentation[min_ch_diff_idx].integral_characteristic - segmentation[min_ch_diff_idx + 1].integral_characteristic):
+                min_ch_diff_idx = i
+        segmentation[min_ch_diff_idx].merge(segmentation[min_ch_diff_idx + 1], f)
+        segmentation.pop(min_ch_diff_idx + 1)
+        min_len_index = 0
+        for i in range(len(segmentation)):
+            print(len(segmentation[i].polyline))
+            if len(segmentation[i].polyline) < len(segmentation[min_len_index].polyline):
+                min_len_index = i
     return segmentation
 
 

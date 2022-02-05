@@ -63,7 +63,7 @@ class App(tk.Tk):
         self.cvs_graphics.delete("all")
         self.main_line.draw(self.cvs_graphics)
         equidistant = equidistant_polyline(self.main_line)
-        segmentation = make_segmentation(equidistant, params.N_INIT)
+        segmentation = make_segmentation(equidistant, params.N_INIT, params.N_P, params.N_S, params.F)
         smoothed = smoothed_polyline(equidistant)
         if self.to_equidistant.get() != 0:
             equidistant.draw(self.cvs_graphics)

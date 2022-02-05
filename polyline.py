@@ -34,7 +34,7 @@ class Polyline:
     def angle_adittion(self, i, p):
         tmp = (self.polyline[i + 1][0] - self.polyline[i][0]) * (self.polyline[i][0] - self.polyline[i - 1][0])
         tmp += (self.polyline[i + 1][1] - self.polyline[i][1]) * (self.polyline[i][1] - self.polyline[i - 1][1])
-        return math.acos(tmp / p)
+        return math.acos(round(tmp / p, params.DIGITS_COUNT))
 
     def full_variation(self):
         c = 0
@@ -46,8 +46,8 @@ class Polyline:
     def extremal_vertexes(self):
         e = 0
         p = distance(self.polyline[0], self.polyline[1]) ** 2
-        for i in range(1, self.elements_count - 1):
-            if self.angle_adittion(i, p) > self.angle_adittion(i - 1, p) and self.angle_adittion(i, p) > self.angle_adittion(i + 1, p):
+        for i in range(2, self.elements_count - 2):
+            if (self.angle_adittion(i, p) > self.angle_adittion(i - 1, p) and self.angle_adittion(i, p) > self.angle_adittion(i + 1, p)) or (self.angle_adittion(i, p) < self.angle_adittion(i - 1, p) and self.angle_adittion(i, p) < self.angle_adittion(i + 1, p)):
                 e += 1
         return e
 
@@ -58,8 +58,7 @@ class Polyline:
         last_dot = self.elements_count - 1
         p = distance(self.polyline[0], self.polyline[1]) ** 2
         self.elements_count += second_polyline.elements_count - 1
-        for i in range(1, second_polyline.elements_count):
-            self.polyline.append(copy.deepcopy(second_polyline.polyline[i]))
+        self.polyline += copy.deepcopy(second_polyline.polyline[1:])
         if self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot - 1, p) and self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot + 1, p):
             self.integral_characteristic += f
 
@@ -86,5 +85,5 @@ class Polyline:
             splitted[0].polyline += splitted[1].polyline[1:]
             splitted[0].elements_count = len(splitted[0].polyline)
             splitted.pop(1)
-        return len(splitted), splitted
+        return splitted
 
