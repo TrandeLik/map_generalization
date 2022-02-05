@@ -44,7 +44,6 @@ else:
 print("Введите имя выходного файла:")
 output_filename = input()
 print("Ожидайте завершение алгоритма!")
-write_polyline_to_file(main_line, "kek.txt")
 equidistant = equidistant_polyline(main_line)
 segmentation = make_segmentation(equidistant, params.N_INIT, params.N_P, params.N_S, params.F)
 simplified = simplify(copy.deepcopy(segmentation), params.h)
