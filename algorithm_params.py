@@ -1,18 +1,23 @@
+import configparser
+
+
 class AlgoParams:
-    def __init__(self):
-        self.MIN_X = 100
-        self.MIN_Y = 100
-        self.MAX_X = 1400
-        self.MAX_Y = 1200
-        self.C = 0.5
-        self.GENERATION_RATIO = 0.25
-        self.N_INIT = 6
-        self.N_S = 3
-        self.N_P = 4
-        self.F = 0.5
-        self.EPS = 1e-8
-        self.DIGITS_COUNT = 6
-        self.h = 20
+    def __init__(self, filename):
+        config = configparser.ConfigParser()
+        config.read(filename)
+        self.MIN_X = int(config["AlgorithmParams"]["MIN_X"])
+        self.MIN_Y = int(config["AlgorithmParams"]["MIN_Y"])
+        self.MAX_X = int(config["AlgorithmParams"]["MAX_X"])
+        self.MAX_Y = int(config["AlgorithmParams"]["MAX_Y"])
+        self.C = float(config["AlgorithmParams"]["C"])
+        self.GENERATION_RATIO = float(config["AlgorithmParams"]["GENERATION_RATIO"])
+        self.N_INIT = int(config["AlgorithmParams"]["N_INIT"])
+        self.N_S = int(config["AlgorithmParams"]["N_S"])
+        self.N_P = int(config["AlgorithmParams"]["N_P"])
+        self.F = float(config["AlgorithmParams"]["F"])
+        self.EPS = float(config["AlgorithmParams"]["EPS"])
+        self.DIGITS_COUNT = int(config["AlgorithmParams"]["DIGITS_COUNT"])
+        self.h = float(config["AlgorithmParams"]["h"])
 
 
-params = AlgoParams()
+params = AlgoParams("generalization_settings.ini")
