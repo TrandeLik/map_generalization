@@ -59,8 +59,9 @@ class Polyline:
         p = distance(self.polyline[0], self.polyline[1]) ** 2
         self.elements_count += second_polyline.elements_count - 1
         self.polyline += copy.deepcopy(second_polyline.polyline[1:])
-        if self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot - 1, p) and self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot + 1, p):
-            self.integral_characteristic += f
+        if 2 <= last_dot < self.elements_count - 2:
+            if (self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot - 1, p) and self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot + 1, p)) or (self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot - 1, p) and self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot + 1, p)):
+                self.integral_characteristic += f
 
     def split(self, n):
         splitted = [Polyline(self.color, 0, self.width) for _ in range(n)]

@@ -107,7 +107,8 @@ def simplify(segments, h):
     for segment in segments:
         segment.simplify(h)
     for i in range(1, len(segments)):
-        segments[0].merge(segments[i], 0)
+        segments[0].polyline += segments[i].polyline[1:]
+    segments[0].elements_count = len(segments[0].polyline)
     segments[0].color = "orange"
     return segments[0]
 
