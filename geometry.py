@@ -6,6 +6,9 @@ def distance(a, b):
     return ((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1])) ** 0.5
 
 
+def is_dot_between(dot, first, second):
+    return min(first[0], second[0]) - params.EPS <= dot[0] <= max(first[0], second[0]) + params.EPS and min(first[1], second[1]) - params.EPS <= dot[1] <= max(first[1], second[1]) + params.EPS
+
 def line_equation(p, q):
     a = p[1] - q[1]
     b = q[0] - p[0]
@@ -40,7 +43,7 @@ def intersection_of_circle_and_segment(centre, r, p, q):
     intersection_points = intersection_of_circle_and_line_centered(r, a, b, c)
     result = []
     for dot in intersection_points:
-        if min(p_new[0], q_new[0]) - params.EPS <= dot[0] <= max(p_new[0], q_new[0]) + params.EPS and min(p_new[1], q_new[1]) - params.EPS <= dot[1] <= max(p_new[1], q_new[1]) + params.EPS:
+        if is_dot_between(dot, p_new, q_new):
             result.append(move_center(dot, [-centre[0], -centre[1]]))
     return result
 
@@ -61,6 +64,36 @@ def douglas_packer_algorithm(dots, h, first, second):
         douglas_packer_algorithm(dots, h, first, max_dist_idx)
         douglas_packer_algorithm(dots, h, max_dist_idx, second)
     return dots
+
+
+def det(a, b, c, d):
+    return a * d - b * c
+
+
+def lines_intersection(a1, b1, c1, a2, b2, c2):
+    zn = det(a1, b1, a2, b2)
+    if abs(zn) < params.EPS:
+        return []
+    x = -det(c1, b1, c2, b2) / zn
+    y = -det(a1, c1, a2, c2) / zn
+    return [x, y]
+
+
+def are_lines_equivalent(a1, b1, c1, a2, b2, c2):
+    return abs(det(a1, b1, a2, b2)) < params.EPS and abs(det(a1, c1, a2, c2)) < params.EPS and abs(det(b1, c1, b2, c2)) < params.EPS
+
+
+def segments_intersection(first_p, first_q, second_p, second_q):
+    a1, b1, c1 = line_equation(first_p, first_q)
+    a2, b2, c2 = line_equation(second_p, second_q)
+    if are_lines_equivalent(a1, b1, c1, a2, b2, c2):
+        return True, []
+    dot = lines_intersection(a1, b1, c1, a2, b2, c2)
+    if len(dot) == 0:
+        return False, []
+    if is_dot_between(dot, first_p, first_q) and is_dot_between(dot, second_p, second_q):
+        return False, dot
+    return False, []
 
 
 def least_square_method(dots):
