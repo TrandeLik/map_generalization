@@ -88,6 +88,13 @@ class Polyline:
             splitted.pop(1)
         return splitted
 
+    def fractal_dimension(self, c, k):
+        delta = self.step(c)
+        dimensions = []
+        for i in range(1, k + 1):
+            dimensions.append([i * delta, box_counting(self.polyline, i * delta)])
+        return -least_square_method(dimensions)
+
     def simplify(self, h):
         dots = []
         for dot in self.polyline:

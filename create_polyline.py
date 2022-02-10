@@ -103,8 +103,10 @@ def make_segmentation(polyline, n, n_p, n_s, f):
     return segmentation
 
 
-def simplify(segments, h):
+def simplify(segments, c, k, m, c_h):
     for segment in segments:
+        d = segment.fractal_dimension(c, k)
+        h = c_h * pow(m, 2 - d)
         segment.simplify(h)
     for i in range(1, len(segments)):
         segments[0].polyline += segments[i].polyline[1:]

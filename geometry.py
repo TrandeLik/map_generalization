@@ -1,3 +1,5 @@
+import math
+
 from algorithm_params import params
 import numpy as np
 
@@ -87,13 +89,13 @@ def segments_intersection(first_p, first_q, second_p, second_q):
     a1, b1, c1 = line_equation(first_p, first_q)
     a2, b2, c2 = line_equation(second_p, second_q)
     if are_lines_equivalent(a1, b1, c1, a2, b2, c2):
-        return True, []
+        return True
     dot = lines_intersection(a1, b1, c1, a2, b2, c2)
     if len(dot) == 0:
-        return False, []
+        return False
     if is_dot_between(dot, first_p, first_q) and is_dot_between(dot, second_p, second_q):
-        return False, dot
-    return False, []
+        return True
+    return False
 
 
 def least_square_method(dots):
@@ -105,3 +107,51 @@ def least_square_method(dots):
     a = np.vstack([a, np.ones(len(a))]).T
     k, _ = np.linalg.lstsq(a, b, rcond=None)[0]
     return k
+
+
+def get_limits(polyline):
+    max_x = polyline[0][0]
+    max_y = polyline[0][0]
+    min_x = polyline[0][0]
+    min_y = polyline[0][0]
+    for dot in polyline:
+        if dot[0] < min_x:
+            min_x = dot[0]
+        if dot[1] < min_y:
+            min_y = dot[1]
+        if dot[0] > max_x:
+            max_x = dot[0]
+        if dot[1] > max_y:
+            max_y = dot[1]
+    return min_x, min_y, max_x, max_y
+
+
+def square_intersect_polyline(start_dot_x, start_dot_y, a, polyline):
+    rectangle = [[start_dot_x, start_dot_y], [start_dot_x + a, start_dot_y], [start_dot_x, start_dot_y + a], [start_dot_x + a, start_dot_y + a]]
+    n = len(polyline) - 1
+    for i in range(n):
+        if segments_intersection(polyline[i], polyline[i + 1], rectangle[0], rectangle[1]):
+            return True
+        if segments_intersection(polyline[i], polyline[i + 1], rectangle[1], rectangle[3]):
+            return True
+        if segments_intersection(polyline[i], polyline[i + 1], rectangle[3], rectangle[2]):
+            return True
+        if segments_intersection(polyline[i], polyline[i + 1], rectangle[0], rectangle[2]):
+            return True
+        if start_dot_x <= polyline[i][0] <= start_dot_x + a and start_dot_y <= polyline[i][1] <= start_dot_y + a:
+            return True
+    if start_dot_x <= polyline[n][0] <= start_dot_x + a and start_dot_y <= polyline[n][1] <= start_dot_y + a:
+        return True
+    return False
+
+
+def box_counting(polyline, a):
+    min_x, min_y, max_x, max_y = get_limits(polyline)
+    count = 0
+    width = math.floor((max_x - min_x) / a) + 1
+    height = math.floor((max_y - min_y) / a) + 1
+    for i in range(width):
+        for j in range(height):
+            if square_intersect_polyline(min_x + i * a, min_y + j * a, a, polyline):
+                count += 1
+    return count

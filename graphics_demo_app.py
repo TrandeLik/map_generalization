@@ -67,7 +67,7 @@ class App(tk.Tk):
         self.main_line = generate_line(int(self.ent_count.get()))
         self.equidistant = equidistant_polyline(self.main_line)
         self.segmentation = make_segmentation(self.equidistant, params.N_INIT, params.N_P, params.N_S, params.F)
-        self.simplified = simplify(copy.deepcopy(self.segmentation), params.h)
+        self.simplified = simplify(copy.deepcopy(self.segmentation), params.C, params.k, params.m, params.c_h)
         self.smoothed = smoothed_polyline(self.simplified)
         self.main_line.draw(self.cvs_graphics)
 

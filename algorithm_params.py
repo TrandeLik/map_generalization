@@ -17,7 +17,10 @@ class AlgoParams:
         self.F = float(config["AlgorithmParams"]["F"])
         self.EPS = float(config["AlgorithmParams"]["EPS"])
         self.DIGITS_COUNT = int(config["AlgorithmParams"]["DIGITS_COUNT"])
-        self.h = float(config["AlgorithmParams"]["h"])
+        self.k = int(config["AlgorithmParams"]["k"])
+        self.m = float(config["AlgorithmParams"]["m"])
+        self.c_h = float(config["AlgorithmParams"]["c_h"])
+
 
 
 params = AlgoParams("generalization_settings.ini")
