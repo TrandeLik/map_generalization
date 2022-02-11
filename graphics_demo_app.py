@@ -1,4 +1,3 @@
-import copy
 import tkinter as tk
 from create_polyline import *
 from algorithm_params import params
@@ -16,24 +15,24 @@ class App(tk.Tk):
         self.btn_generate.bind("<Button-1>", self.run_generate_line)
         self.lbl_algo = tk.Label(self.fr_menu, text="Отображать следующие линии:")
         self.to_draw_main = tk.IntVar()
-        self.cb_draw_main = tk.Checkbutton(self.fr_menu, text="Основная линия", variable=self.to_draw_main,
-                                           command=self.run_main_algo)
+        self.cb_draw_main = tk.Checkbutton(self.fr_menu, text="Основная линия",
+                                           variable=self.to_draw_main, command=self.run_main_algo)
         self.to_equidistant = tk.IntVar()
-        self.cb_equidistant = tk.Checkbutton(self.fr_menu, text="Равнозвенная линия", variable=self.to_equidistant,
-                                             command=self.run_main_algo)
+        self.cb_equidistant = tk.Checkbutton(self.fr_menu, text="Равнозвенная линия",
+                                             variable=self.to_equidistant, command=self.run_main_algo)
         self.to_make_segmentation = tk.IntVar()
-        self.cb_segmentation = tk.Checkbutton(self.fr_menu, text="Сегментированная линия", variable=self.to_make_segmentation,
-                                              command=self.run_main_algo)
+        self.cb_segmentation = tk.Checkbutton(self.fr_menu, text="Сегментированная линия",
+                                              variable=self.to_make_segmentation, command=self.run_main_algo)
         self.to_simplify = tk.IntVar()
-        self.cb_simplify = tk.Checkbutton(self.fr_menu, text="Упрощенная линия", variable=self.to_simplify,
-                                          command=self.run_main_algo)
+        self.cb_simplify = tk.Checkbutton(self.fr_menu, text="Упрощенная линия",
+                                          variable=self.to_simplify, command=self.run_main_algo)
         self.to_smooth = tk.IntVar()
-        self.cb_smoothing = tk.Checkbutton(self.fr_menu, text="Сглаженная линия", variable=self.to_smooth,
-                                           command=self.run_main_algo)
+        self.cb_smoothing = tk.Checkbutton(self.fr_menu, text="Сглаженная линия",
+                                           variable=self.to_smooth, command=self.run_main_algo)
         self.lbl_others = tk.Label(self.fr_menu, text="Другие опции")
         self.need_polygon = tk.IntVar()
-        self.cb_polygon = tk.Checkbutton(self.fr_menu, text="Залитый многоугольник", variable=self.need_polygon,
-                                         command=self.fill_polyline)
+        self.cb_polygon = tk.Checkbutton(self.fr_menu, text="Залитый многоугольник",
+                                         variable=self.need_polygon, command=self.fill_polyline)
         self.lbl_vertexes_count = tk.Label(self.fr_menu, text="Количество вершин в \nупрощенной ломаной: ")
 
         self.lbl_count.grid(row=0, column=0, sticky="ew", padx=5, pady=10)
@@ -58,7 +57,7 @@ class App(tk.Tk):
         self.simplified = None
         self.smoothed = None
 
-    def run_generate_line(self, event):
+    def run_generate_line(self, _):
         self.to_draw_main.set(1)
         self.to_equidistant.set(0)
         self.to_make_segmentation.set(0)

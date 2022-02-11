@@ -22,5 +22,4 @@ class AlgoParams:
         self.c_h = float(config["AlgorithmParams"]["c_h"])
 
 
-
 params = AlgoParams("generalization_settings.ini")
