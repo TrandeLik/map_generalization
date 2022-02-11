@@ -109,7 +109,7 @@ class Polyline:
         delta = self.step(c)
         dimensions = []
         for i in range(1, k + 1):
-            dimensions.append([i * delta, box_counting(self.polyline, i * delta)])
+            dimensions.append([math.log2(i * delta), math.log2(box_counting(self.polyline, i * delta))])
         return -least_square_method(dimensions)
 
     def simplify(self, h):
