@@ -47,7 +47,10 @@ class Polyline:
         e = 0
         p = distance(self.polyline[0], self.polyline[1]) ** 2
         for i in range(2, self.elements_count - 2):
-            if (self.angle_adittion(i, p) > self.angle_adittion(i - 1, p) and self.angle_adittion(i, p) > self.angle_adittion(i + 1, p)) or (self.angle_adittion(i, p) < self.angle_adittion(i - 1, p) and self.angle_adittion(i, p) < self.angle_adittion(i + 1, p)):
+            if (self.angle_adittion(i, p) > self.angle_adittion(i - 1, p)
+                and self.angle_adittion(i, p) > self.angle_adittion(i + 1, p)) \
+                    or (self.angle_adittion(i, p) < self.angle_adittion(i - 1, p)
+                        and self.angle_adittion(i, p) < self.angle_adittion(i + 1, p)):
                 e += 1
         return e
 
@@ -60,7 +63,10 @@ class Polyline:
         self.elements_count += second_polyline.elements_count - 1
         self.polyline += copy.deepcopy(second_polyline.polyline[1:])
         if 2 <= last_dot < self.elements_count - 2:
-            if (self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot - 1, p) and self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot + 1, p)) or (self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot - 1, p) and self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot + 1, p)):
+            if (self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot - 1, p)
+                and self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot + 1, p)) \
+                    or (self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot - 1, p)
+                        and self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot + 1, p)):
                 self.integral_characteristic += f
 
     def split(self, n):

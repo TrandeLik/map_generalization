@@ -1,6 +1,5 @@
 from polyline import Polyline
 import random
-import math
 import copy
 from geometry import *
 from algorithm_params import params
@@ -74,10 +73,8 @@ def equidistant_polyline(polyline):
                 equidistant.polyline.append(copy.deepcopy(contenders[1]))
             current_center_pos += 1
             corresponding_segment = current_segment_number
-
     if distance(equidistant.polyline[current_center_pos], polyline.polyline[polyline.elements_count - 1]) > params.EPS:
         equidistant.polyline.append(copy.deepcopy(polyline.polyline[polyline.elements_count - 1]))
-
     equidistant.elements_count = len(equidistant.polyline)
     return equidistant
 
@@ -92,7 +89,9 @@ def make_segmentation(polyline, n, n_p, n_s, f):
     while len(segmentation[min_len_index].polyline) < n_p or len(segmentation) > n_s:
         min_ch_diff_idx = 0
         for i in range(len(segmentation) - 1):
-            if abs(segmentation[i].integral_characteristic - segmentation[i + 1].integral_characteristic) < abs(segmentation[min_ch_diff_idx].integral_characteristic - segmentation[min_ch_diff_idx + 1].integral_characteristic):
+            if abs(segmentation[i].integral_characteristic - segmentation[i + 1].integral_characteristic) < \
+                    abs(segmentation[min_ch_diff_idx].integral_characteristic -
+                        segmentation[min_ch_diff_idx + 1].integral_characteristic):
                 min_ch_diff_idx = i
         segmentation[min_ch_diff_idx].merge(segmentation[min_ch_diff_idx + 1], f)
         segmentation.pop(min_ch_diff_idx + 1)

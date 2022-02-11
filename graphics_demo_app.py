@@ -34,6 +34,7 @@ class App(tk.Tk):
         self.need_polygon = tk.IntVar()
         self.cb_polygon = tk.Checkbutton(self.fr_menu, text="Залитый многоугольник", variable=self.need_polygon,
                                          command=self.fill_polyline)
+        self.lbl_vertexes_count = tk.Label(self.fr_menu, text="Количество вершин в \nупрощенной ломаной: ")
 
         self.lbl_count.grid(row=0, column=0, sticky="ew", padx=5, pady=10)
         self.ent_count.grid(row=1, column=0, sticky="ew", padx=5, pady=10)
@@ -46,6 +47,7 @@ class App(tk.Tk):
         self.cb_smoothing.grid(row=8, column=0, sticky="ew", padx=5, pady=10)
         self.lbl_others.grid(row=9, column=0, sticky="ew", padx=5, pady=5)
         self.cb_polygon.grid(row=10, column=0, sticky="ew", padx=5, pady=10)
+        self.lbl_vertexes_count.grid(row=11, column=0, sticky="ew", padx=5, pady=20)
 
         self.fr_menu.grid(row=0, column=0, sticky="ns")
         self.cvs_graphics.grid(row=0, column=1, sticky="nsew")
@@ -69,6 +71,7 @@ class App(tk.Tk):
         self.segmentation = make_segmentation(self.equidistant, params.N_INIT, params.N_P, params.N_S, params.F)
         self.simplified = simplify(copy.deepcopy(self.segmentation), params.C, params.k, params.m, params.c_h)
         self.smoothed = smoothed_polyline(self.simplified)
+        self.lbl_vertexes_count["text"] = f"Количество вершин в \nупрощенной ломаной: {self.smoothed.elements_count}"
         self.main_line.draw(self.cvs_graphics)
 
     def fill_polyline(self):

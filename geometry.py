@@ -9,7 +9,9 @@ def distance(a, b):
 
 
 def is_dot_between(dot, first, second):
-    return min(first[0], second[0]) - params.EPS <= dot[0] <= max(first[0], second[0]) + params.EPS and min(first[1], second[1]) - params.EPS <= dot[1] <= max(first[1], second[1]) + params.EPS
+    return min(first[0], second[0]) - params.EPS <= dot[0] <= max(first[0], second[0]) + params.EPS \
+           and min(first[1], second[1]) - params.EPS <= dot[1] <= max(first[1], second[1]) + params.EPS
+
 
 def line_equation(p, q):
     a = p[1] - q[1]
@@ -60,7 +62,8 @@ def douglas_packer_algorithm(dots, h, first, second):
     max_dist_idx = first
     a, b, c = line_equation(dots[first], dots[second])
     for i in range(first, second):
-        if distance_between_dot_and_line(dots[i], a, b, c) > distance_between_dot_and_line(dots[max_dist_idx], a, b, c) + params.EPS:
+        if distance_between_dot_and_line(dots[i], a, b, c) > \
+                distance_between_dot_and_line(dots[max_dist_idx], a, b, c) + params.EPS:
             max_dist_idx = i
     if distance_between_dot_and_line(dots[max_dist_idx], a, b, c) > h + params.EPS:
         douglas_packer_algorithm(dots, h, first, max_dist_idx)
@@ -82,7 +85,8 @@ def lines_intersection(a1, b1, c1, a2, b2, c2):
 
 
 def are_lines_equivalent(a1, b1, c1, a2, b2, c2):
-    return abs(det(a1, b1, a2, b2)) < params.EPS and abs(det(a1, c1, a2, c2)) < params.EPS and abs(det(b1, c1, b2, c2)) < params.EPS
+    return abs(det(a1, b1, a2, b2)) < params.EPS and abs(det(a1, c1, a2, c2)) < params.EPS \
+           and abs(det(b1, c1, b2, c2)) < params.EPS
 
 
 def segments_intersection(first_p, first_q, second_p, second_q):
@@ -121,7 +125,8 @@ def get_min_dot(polyline):
 
 
 def square_intersect_polyline(start_dot_x, start_dot_y, a, dot1, dot2):
-    rectangle = [[start_dot_x, start_dot_y], [start_dot_x + a, start_dot_y], [start_dot_x, start_dot_y + a], [start_dot_x + a, start_dot_y + a]]
+    rectangle = [[start_dot_x, start_dot_y], [start_dot_x + a, start_dot_y],
+                 [start_dot_x, start_dot_y + a], [start_dot_x + a, start_dot_y + a]]
     if segments_intersection(dot1, dot2, rectangle[0], rectangle[1]):
         return True
     if segments_intersection(dot1, dot2, rectangle[1], rectangle[3]):
@@ -145,8 +150,10 @@ def box_counting(polyline, a):
         rectangles.add(tuple([i_start, j_start]))
         rectangles.add(tuple([i_finish, j_finish]))
         if i_start != i_finish and j_start != j_finish:
-            if square_intersect_polyline(min_x + a * min(i_start, i_finish), min_y + a * max(j_start, j_finish), a, polyline[i], polyline[i + 1]):
+            if square_intersect_polyline(min_x + a * min(i_start, i_finish), min_y + a * max(j_start, j_finish),
+                                         a, polyline[i], polyline[i + 1]):
                 rectangles.add(tuple([min(i_start, i_finish), max(j_start, j_finish)]))
-            if square_intersect_polyline(min_x + a * max(i_start, i_finish), min_y + a * min(j_start, j_finish), a, polyline[i], polyline[i + 1]):
+            if square_intersect_polyline(min_x + a * max(i_start, i_finish), min_y + a * min(j_start, j_finish),
+                                         a, polyline[i], polyline[i + 1]):
                 rectangles.add(tuple([max(i_start, i_finish), min(j_start, j_finish)]))
     return len(rectangles)
