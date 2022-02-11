@@ -126,32 +126,33 @@ def get_limits(polyline):
     return min_x, min_y, max_x, max_y
 
 
-def square_intersect_polyline(start_dot_x, start_dot_y, a, polyline):
+def square_intersect_polyline(start_dot_x, start_dot_y, a, dot1, dot2):
     rectangle = [[start_dot_x, start_dot_y], [start_dot_x + a, start_dot_y], [start_dot_x, start_dot_y + a], [start_dot_x + a, start_dot_y + a]]
-    n = len(polyline) - 1
-    for i in range(n):
-        if segments_intersection(polyline[i], polyline[i + 1], rectangle[0], rectangle[1]):
-            return True
-        if segments_intersection(polyline[i], polyline[i + 1], rectangle[1], rectangle[3]):
-            return True
-        if segments_intersection(polyline[i], polyline[i + 1], rectangle[3], rectangle[2]):
-            return True
-        if segments_intersection(polyline[i], polyline[i + 1], rectangle[0], rectangle[2]):
-            return True
-        if start_dot_x <= polyline[i][0] <= start_dot_x + a and start_dot_y <= polyline[i][1] <= start_dot_y + a:
-            return True
-    if start_dot_x <= polyline[n][0] <= start_dot_x + a and start_dot_y <= polyline[n][1] <= start_dot_y + a:
+    if segments_intersection(dot1, dot2, rectangle[0], rectangle[1]):
+        return True
+    if segments_intersection(dot1, dot2, rectangle[1], rectangle[3]):
+        return True
+    if segments_intersection(dot1, dot2, rectangle[3], rectangle[2]):
+        return True
+    if segments_intersection(dot1, dot2, rectangle[0], rectangle[2]):
         return True
     return False
 
 
 def box_counting(polyline, a):
     min_x, min_y, max_x, max_y = get_limits(polyline)
-    count = 0
-    width = math.floor((max_x - min_x) / a) + 1
-    height = math.floor((max_y - min_y) / a) + 1
-    for i in range(width):
-        for j in range(height):
-            if square_intersect_polyline(min_x + i * a, min_y + j * a, a, polyline):
-                count += 1
-    return count
+    rectangles = set()
+    n = len(polyline) - 1
+    for i in range(n):
+        i_start = math.floor((polyline[i][0] - min_x) / a)
+        j_start = math.floor((polyline[i][1] - min_y) / a)
+        i_finish = math.floor((polyline[i + 1][0] - min_x) / a)
+        j_finish = math.floor((polyline[i + 1][1] - min_y) / a)
+        rectangles.add(tuple([i_start, j_start]))
+        rectangles.add(tuple([i_finish, j_finish]))
+        if i_start != i_finish and j_start != j_finish:
+            if square_intersect_polyline(min_x + a * min(i_start, i_finish), min_y + a * max(j_start, j_finish), a, polyline[i], polyline[i + 1]):
+                rectangles.add(tuple([min(i_start, i_finish), max(j_start, j_finish)]))
+            if square_intersect_polyline(min_x + a * max(i_start, i_finish), min_y + a * min(j_start, j_finish), a, polyline[i], polyline[i + 1]):
+                rectangles.add(tuple([max(i_start, i_finish), min(j_start, j_finish)]))
+    return len(rectangles)
