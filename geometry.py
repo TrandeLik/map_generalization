@@ -109,9 +109,7 @@ def least_square_method(dots):
     return k
 
 
-def get_limits(polyline):
-    max_x = polyline[0][0]
-    max_y = polyline[0][0]
+def get_min_dot(polyline):
     min_x = polyline[0][0]
     min_y = polyline[0][0]
     for dot in polyline:
@@ -119,11 +117,7 @@ def get_limits(polyline):
             min_x = dot[0]
         if dot[1] < min_y:
             min_y = dot[1]
-        if dot[0] > max_x:
-            max_x = dot[0]
-        if dot[1] > max_y:
-            max_y = dot[1]
-    return min_x, min_y, max_x, max_y
+    return min_x, min_y
 
 
 def square_intersect_polyline(start_dot_x, start_dot_y, a, dot1, dot2):
@@ -140,7 +134,7 @@ def square_intersect_polyline(start_dot_x, start_dot_y, a, dot1, dot2):
 
 
 def box_counting(polyline, a):
-    min_x, min_y, max_x, max_y = get_limits(polyline)
+    min_x, min_y = get_min_dot(polyline)
     rectangles = set()
     n = len(polyline) - 1
     for i in range(n):
