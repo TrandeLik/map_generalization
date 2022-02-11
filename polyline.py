@@ -32,6 +32,8 @@ class Polyline:
         return c * d_in
 
     def angle_adittion(self, i, p):
+        if i == 0 or i == self.elements_count - 1:
+            return 0
         tmp = (self.polyline[i + 1][0] - self.polyline[i][0]) * (self.polyline[i][0] - self.polyline[i - 1][0])
         tmp += (self.polyline[i + 1][1] - self.polyline[i][1]) * (self.polyline[i][1] - self.polyline[i - 1][1])
         return math.acos(round(tmp / p, params.DIGITS_COUNT))
@@ -39,18 +41,24 @@ class Polyline:
     def full_variation(self):
         c = 0
         p = distance(self.polyline[0], self.polyline[1]) ** 2
-        for i in range(1, self.elements_count - 1):
+        for i in range(self.elements_count):
             c += self.angle_adittion(i, p)
         return c / (2 * math.pi)
 
-    def extremal_vertexes(self):
-        e = 0
-        p = distance(self.polyline[0], self.polyline[1]) ** 2
-        for i in range(2, self.elements_count - 2):
+    def is_vertex_extremal(self, i, p):
+        if 0 < i < self.elements_count - 1:
             if (self.angle_adittion(i, p) > self.angle_adittion(i - 1, p)
                 and self.angle_adittion(i, p) > self.angle_adittion(i + 1, p)) \
                     or (self.angle_adittion(i, p) < self.angle_adittion(i - 1, p)
                         and self.angle_adittion(i, p) < self.angle_adittion(i + 1, p)):
+                return True
+        return False
+
+    def extremal_vertexes(self):
+        e = 0
+        p = distance(self.polyline[0], self.polyline[1]) ** 2
+        for i in range(1, self.elements_count - 1):
+            if self.is_vertex_extremal(i, p):
                 e += 1
         return e
 
@@ -62,12 +70,15 @@ class Polyline:
         p = distance(self.polyline[0], self.polyline[1]) ** 2
         self.elements_count += second_polyline.elements_count - 1
         self.polyline += copy.deepcopy(second_polyline.polyline[1:])
-        if 2 <= last_dot < self.elements_count - 2:
-            if (self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot - 1, p)
-                and self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot + 1, p)) \
-                    or (self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot - 1, p)
-                        and self.angle_adittion(last_dot, p) > self.angle_adittion(last_dot + 1, p)):
-                self.integral_characteristic += f
+        if self.is_vertex_extremal(last_dot - 1, p):
+            self.integral_characteristic -= f
+        self.integral_characteristic += second_polyline.integral_characteristic
+        if second_polyline.is_vertex_extremal(second_polyline.elements_count - 2, p):
+            self.integral_characteristic -= f
+        for dot in range(last_dot - 1, last_dot + 1):
+            if 1 <= dot < self.elements_count - 1:
+                if self.is_vertex_extremal(dot, p):
+                    self.integral_characteristic += f
 
     def split(self, n):
         splitted = [Polyline(self.color, 0, self.width) for _ in range(n)]
