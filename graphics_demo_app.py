@@ -16,19 +16,19 @@ class App(tk.Tk):
         self.lbl_algo = tk.Label(self.fr_menu, text="Отображать следующие линии:")
         self.to_draw_main = tk.IntVar()
         self.cb_draw_main = tk.Checkbutton(self.fr_menu, text="Основная линия",
-                                           variable=self.to_draw_main, command=self.run_main_algo)
+                                           variable=self.to_draw_main, command=self.draw_polylines)
         self.to_equidistant = tk.IntVar()
         self.cb_equidistant = tk.Checkbutton(self.fr_menu, text="Равнозвенная линия",
-                                             variable=self.to_equidistant, command=self.run_main_algo)
+                                             variable=self.to_equidistant, command=self.draw_polylines)
         self.to_make_segmentation = tk.IntVar()
         self.cb_segmentation = tk.Checkbutton(self.fr_menu, text="Сегментированная линия",
-                                              variable=self.to_make_segmentation, command=self.run_main_algo)
+                                              variable=self.to_make_segmentation, command=self.draw_polylines)
         self.to_simplify = tk.IntVar()
         self.cb_simplify = tk.Checkbutton(self.fr_menu, text="Упрощенная линия",
-                                          variable=self.to_simplify, command=self.run_main_algo)
+                                          variable=self.to_simplify, command=self.draw_polylines)
         self.to_smooth = tk.IntVar()
         self.cb_smoothing = tk.Checkbutton(self.fr_menu, text="Сглаженная линия",
-                                           variable=self.to_smooth, command=self.run_main_algo)
+                                           variable=self.to_smooth, command=self.draw_polylines)
         self.lbl_others = tk.Label(self.fr_menu, text="Другие опции")
         self.need_polygon = tk.IntVar()
         self.cb_polygon = tk.Checkbutton(self.fr_menu, text="Залитый многоугольник",
@@ -75,14 +75,14 @@ class App(tk.Tk):
 
     def fill_polyline(self):
         if self.need_polygon.get() == 0:
-            self.run_main_algo()
+            self.draw_polylines()
         else:
             polygon = copy.deepcopy(self.main_line.polyline)
             polygon.append([self.main_line.polyline[0][0],
                             self.main_line.polyline[self.main_line.elements_count - 1][1]])
             self.cvs_graphics.create_polygon(polygon, outline="black", fill="black")
 
-    def run_main_algo(self):
+    def draw_polylines(self):
         self.cvs_graphics.delete("all")
         if self.to_draw_main.get() != 0:
             self.main_line.draw(self.cvs_graphics)
