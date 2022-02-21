@@ -29,10 +29,7 @@ class App(tk.Tk):
         self.to_smooth = tk.IntVar()
         self.cb_smoothing = tk.Checkbutton(self.fr_menu, text="Сглаженная линия",
                                            variable=self.to_smooth, command=self.draw_polylines)
-        self.lbl_others = tk.Label(self.fr_menu, text="Другие опции")
         self.need_polygon = tk.IntVar()
-        self.cb_polygon = tk.Checkbutton(self.fr_menu, text="Залитый многоугольник",
-                                         variable=self.need_polygon, command=self.fill_polyline)
         self.lbl_vertexes_count = tk.Label(self.fr_menu, text="Количество вершин в \nупрощенной ломаной: ")
 
         self.lbl_count.grid(row=0, column=0, sticky="ew", padx=5, pady=10)
@@ -44,8 +41,6 @@ class App(tk.Tk):
         self.cb_segmentation.grid(row=6, column=0, sticky="ew", padx=5, pady=10)
         self.cb_simplify.grid(row=7, column=0, sticky="ew", padx=5, pady=10)
         self.cb_smoothing.grid(row=8, column=0, sticky="ew", padx=5, pady=10)
-        self.lbl_others.grid(row=9, column=0, sticky="ew", padx=5, pady=5)
-        self.cb_polygon.grid(row=10, column=0, sticky="ew", padx=5, pady=10)
         self.lbl_vertexes_count.grid(row=11, column=0, sticky="ew", padx=5, pady=20)
 
         self.fr_menu.grid(row=0, column=0, sticky="ns")
@@ -72,15 +67,6 @@ class App(tk.Tk):
         self.smoothed = smoothed_polyline(self.simplified)
         self.lbl_vertexes_count["text"] = f"Количество вершин в \nупрощенной ломаной: {self.smoothed.elements_count}"
         self.main_line.draw(self.cvs_graphics)
-
-    def fill_polyline(self):
-        if self.need_polygon.get() == 0:
-            self.draw_polylines()
-        else:
-            polygon = copy.deepcopy(self.main_line.polyline)
-            polygon.append([self.main_line.polyline[0][0],
-                            self.main_line.polyline[self.main_line.elements_count - 1][1]])
-            self.cvs_graphics.create_polygon(polygon, outline="black", fill="black")
 
     def draw_polylines(self):
         self.cvs_graphics.delete("all")

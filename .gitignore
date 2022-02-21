@@ -1,3 +1,7 @@
 .idea/
 __pycache__/
 polyline_image.py
+.ipynb_checkpoints/
+test.py
+tests_analysis.ipynb
+search_params.py

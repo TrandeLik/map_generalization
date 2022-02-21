@@ -44,11 +44,14 @@ else:
 print("Введите имя выходного файла:")
 output_filename = input()
 print("Ожидайте завершение алгоритма!")
-equidistant = equidistant_polyline(main_line)
-segmentation = make_segmentation(equidistant, params.N_INIT, params.N_P, params.N_S, params.F)
-simplified = simplify(copy.deepcopy(segmentation), params.C, params.k, params.m, params.c_h)
-smoothed = smoothed_polyline(simplified)
-write_polyline_to_file(smoothed, output_filename)
-print(f"Работа завершена! В исходной ломаной - {len(main_line.polyline)} звеньев, в упрощенной - "
-      f"{len(smoothed.polyline)}\n"
-      f"Полученная ломаная сохранена в файле {output_filename}")
+try:
+    equidistant = equidistant_polyline(main_line)
+    segmentation = make_segmentation(equidistant, params.N_INIT, params.N_P, params.N_S, params.F)
+    simplified = simplify(copy.deepcopy(segmentation), params.C, params.k, params.m, params.c_h)
+    smoothed = smoothed_polyline(simplified)
+    write_polyline_to_file(smoothed, output_filename)
+    print(f"Работа завершена! В исходной ломаной - {len(main_line.polyline)} звеньев, в упрощенной - "
+          f"{len(smoothed.polyline)}\n"
+          f"Полученная ломаная сохранена в файле {output_filename}")
+except ZeroDivisionError:
+    print(f"Попробуйте увеличить граничиные значения координат для корректной генерации")

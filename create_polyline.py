@@ -93,8 +93,9 @@ def make_segmentation(polyline, n, n_p, n_s, f):
                     abs(segmentation[min_ch_diff_idx].integral_characteristic -
                         segmentation[min_ch_diff_idx + 1].integral_characteristic):
                 min_ch_diff_idx = i
-        segmentation[min_ch_diff_idx].merge(segmentation[min_ch_diff_idx + 1], f)
-        segmentation.pop(min_ch_diff_idx + 1)
+        if len(segmentation) != 1:
+            segmentation[min_ch_diff_idx].merge(segmentation[min_ch_diff_idx + 1], f)
+            segmentation.pop(min_ch_diff_idx + 1)
         min_len_index = 0
         for i in range(len(segmentation)):
             if len(segmentation[i].polyline) < len(segmentation[min_len_index].polyline):
