@@ -1,7 +1,6 @@
-from create_polyline import *
-from algorithm_params import params
-import copy
-from polyline import Polyline
+from logic.create_polyline import *
+from settings.algorithm_params import params
+from logic.polyline import Polyline
 
 
 def write_polyline_to_file(polyline, filename):

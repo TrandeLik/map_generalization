@@ -1,15 +1,25 @@
-# Реализация алгоритма генерализации линейных объектов
+# Implementation of algorithm for generalization of cartographic objects 
 
-В данном репозитории реализован алгоритм, описанный в статье "Применение методов фрактальной и вычислительной геометрии для картографической генерализации линейных объектов".
-Ознакомиться с оригиналом можно [_**тут**_](http://www.mathnet.ru/php/archive.phtml?wshow=paper&jrnid=mais&paperid=280&option_lang=rus).
-### Графическое приложение
-**graphics_demo_app.py** - файл с демонстрационной графической программой, позволяющей смотреть на результаты каждого из этапов упрощения. Программа генерирует случайную ломаную по заданному количеству звеньев, выполняет рассматриваемый алгоритм, а затем предоставляет возможность наглядно увидеть каждый из этапов алгоритма.
-
-*Замечание*. В связи с отсутствием масштабирования у поля рисования рекомендуется использовать дефолтные значения для ограничений на координаты (в противном случае программа отработает, но отрисуется только кусок сгенерированной ломаной). Кроме того, при дефолтных значениях параметров не рекомендуется генерировать ломаные более, чем со **120** вершинами (в противном случае из-за особенностей создания случайной полилинии произойдет ошибка в процессе выполнения, но при этом можно спокойно ввести новое число и сгенерировать новую линию (более того, из-за особенностей генерации иногда программа может получить ошибку и при меньшем количестве вершин, но вероятность этого крайне мала)
-### Консольное приложение
-**console_app.py** - добавляет возможность чтения ломаной из файла, сохраняет итоговую ломаную в файл, что весьма удобно, если существует цель только упростить линию, а потом уже использовать полученные координаты.
-*Замечание*. Во входном файле точки должны быть упорядоченны в направлении обхода ломаной, при этом каждая точка должна быть записана на отдельной строке строго в формате **(x, y)**.
-### Другие файлы
-**algorithm_params.py, create_polyline.py, geometry.py, polyline.py** - вспомогательные файлы, используемые основными программами.
-
-**generalization_settings.ini** - файл, хранящий параметры алгоритма, их можно менять с целью эксперимента.
+Here is an implementation of map generalization algorithm (The idea is described [_**here**_](https://www.semanticscholar.org/paper/Fractal-and-Computational-Geometry-for-Generalizing-Edelsbrunner-Musin/36ad28df1593df9a9354b68a1b31a9bba63b4db1)).
+There are following directories and files:
+- *graphical_app.py* - simple demonstrative app. In it you can generate random polyline and watch results of 5 main steps:
+    - Bringing a polyline to an equidistant form
+    - Polyline segmentation
+    - Douglas-Peucker simplification
+    - Smoothing with B-splines
+  
+    Also you can read polyline from file to work with your own data.
+    Please, generate polylines which has less than 120 vertexes, because default settings and generation algorithm guarantee correctness only with such number of vertexes
+- *console_app.py* - the same app, but without graphics
+- *logic* - the algorithm itself. All computations and geometry
+- *settings* - settings of developed applications
+- *data* - some additional data such as results of tests and dots of real cartographic objects
+- *presentation* - presentation for joint scientific seminar INM RAS - Huawei
+### Future work
+- Implementing real-time scaling in graphical app (with simplification and without)
+- Implementing canvas movement for correct drawing of large polylines
+- Implementing new algorithms of random polylines generation
+- Implementing graphical interface for settings
+- Implementing simplified polyline saving
+- Answering questions, which are mentioned in the presentation
+- Further research

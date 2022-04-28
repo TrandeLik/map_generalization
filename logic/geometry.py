@@ -1,7 +1,6 @@
 import math
-
-from algorithm_params import params
 import numpy as np
+from settings.algorithm_params import params
 
 
 def distance(a, b):

@@ -1,6 +1,6 @@
 import tkinter as tk
-from create_polyline import *
-from algorithm_params import params
+from logic.create_polyline import *
+from settings.algorithm_params import params
 
 
 class App(tk.Tk):
@@ -9,31 +9,31 @@ class App(tk.Tk):
         super().__init__()
         self.cvs_graphics = tk.Canvas(self, background="white")
         self.fr_menu = tk.Frame(self)
-        self.lbl_count = tk.Label(self.fr_menu, text="Количество звеньев ломаной:")
+        self.lbl_count = tk.Label(self.fr_menu, text="Number of vertexes in\nthe generated polyline:")
         self.ent_count = tk.Entry(self.fr_menu)
-        self.btn_generate = tk.Button(self.fr_menu, text="Сгенерировать ломаную")
+        self.btn_generate = tk.Button(self.fr_menu, text="Generate polyline")
         self.btn_generate.bind("<Button-1>", self.run_generate_line)
-        self.lbl_algo = tk.Label(self.fr_menu, text="Отображать следующие линии:")
+        self.lbl_algo = tk.Label(self.fr_menu, text="Display the following lines:")
         self.to_draw_main = tk.IntVar()
-        self.cb_draw_main = tk.Checkbutton(self.fr_menu, text="Основная линия",
+        self.cb_draw_main = tk.Checkbutton(self.fr_menu, text="Main line",
                                            variable=self.to_draw_main, command=self.draw_polylines)
         self.to_equidistant = tk.IntVar()
-        self.cb_equidistant = tk.Checkbutton(self.fr_menu, text="Равнозвенная линия",
+        self.cb_equidistant = tk.Checkbutton(self.fr_menu, text="Equidistant",
                                              variable=self.to_equidistant, command=self.draw_polylines)
         self.to_make_segmentation = tk.IntVar()
-        self.cb_segmentation = tk.Checkbutton(self.fr_menu, text="Сегментированная линия",
+        self.cb_segmentation = tk.Checkbutton(self.fr_menu, text="Segmentation",
                                               variable=self.to_make_segmentation, command=self.draw_polylines)
         self.to_simplify = tk.IntVar()
-        self.cb_simplify = tk.Checkbutton(self.fr_menu, text="Упрощенная линия",
+        self.cb_simplify = tk.Checkbutton(self.fr_menu, text="Simplified polyline",
                                           variable=self.to_simplify, command=self.draw_polylines)
         self.to_smooth = tk.IntVar()
-        self.cb_smoothing = tk.Checkbutton(self.fr_menu, text="Сглаженная линия",
+        self.cb_smoothing = tk.Checkbutton(self.fr_menu, text="Smoothed polyline",
                                            variable=self.to_smooth, command=self.draw_polylines)
         self.need_polygon = tk.IntVar()
-        self.lbl_vertexes_count = tk.Label(self.fr_menu, text="Количество вершин в \nупрощенной ломаной: ")
-        self.lbl_others = tk.Label(self.fr_menu, text="Другие опции")
+        self.lbl_vertexes_count = tk.Label(self.fr_menu, text="Number of vertices in\n simplified polyline: ")
+        self.lbl_others = tk.Label(self.fr_menu, text="Other options")
         self.file_name = tk.Entry(self.fr_menu)
-        self.btn_file = tk.Button(self.fr_menu, text="Ломаная из файла")
+        self.btn_file = tk.Button(self.fr_menu, text="Read polyline from file")
         self.btn_file.configure(command=self.line_from_file)
 
         self.lbl_count.grid(row=0, column=0, sticky="ew", padx=5, pady=10)
@@ -69,15 +69,6 @@ class App(tk.Tk):
         self.main_line = polyline_main
         self.run()
 
-    def fill_polyline(self):
-        if self.need_polygon.get() == 0:
-            self.draw_polylines()
-        else:
-            polygon = copy.deepcopy(self.main_line.polyline)
-            polygon.append([self.main_line.polyline[0][0],
-                            self.main_line.polyline[self.main_line.elements_count - 1][1]])
-            self.cvs_graphics.create_polygon(polygon, outline="black", fill="black")
-
     def run_generate_line(self, _):
         self.is_from_file = False
         self.run()
@@ -92,12 +83,10 @@ class App(tk.Tk):
         if not self.is_from_file:
             self.main_line = generate_line(int(self.ent_count.get()))
         self.equidistant = equidistant_polyline(self.main_line)
-        self.segmentation = make_segmentation(self.equidistant, params.N_INIT,
-                                              int(0.2 * self.equidistant.elements_count),
-                                              int(0.2 * self.equidistant.elements_count), params.F)
+        self.segmentation = make_segmentation(self.equidistant, params.N_INIT, params.N_P, params.N_S, params.F)
         self.simplified = simplify(copy.deepcopy(self.segmentation), params.C, params.k, params.m, params.c_h)
         self.smoothed = smoothed_polyline(self.simplified)
-        self.lbl_vertexes_count["text"] = f"Количество вершин в \nупрощенной ломаной: {self.smoothed.elements_count}"
+        self.lbl_vertexes_count["text"] = f"Number of vertices in\n simplified polyline: {self.smoothed.elements_count}"
         self.main_line.draw(self.cvs_graphics)
 
     def draw_polylines(self):
@@ -117,7 +106,7 @@ class App(tk.Tk):
 
 if __name__ == '__main__':
     app = App()
-    app.title("Упрощение ломаных линий")
+    app.title("Polyline simplification")
     app.rowconfigure(0, minsize=1080, weight=1)
     app.columnconfigure(1, minsize=1920, weight=1)
     app.mainloop()

@@ -1,8 +1,8 @@
-from polyline import Polyline
 import random
 import copy
-from geometry import *
-from algorithm_params import params
+from logic.polyline import Polyline
+from logic.geometry import *
+from settings.algorithm_params import params
 
 
 def generate(arr, max_depth, current, a_x, a_y, b_x, b_y):

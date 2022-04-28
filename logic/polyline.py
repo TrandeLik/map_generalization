@@ -1,7 +1,6 @@
 import copy
-
-from geometry import *
 import math
+from logic.geometry import *
 
 
 class Polyline:
