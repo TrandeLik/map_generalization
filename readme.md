@@ -23,4 +23,7 @@ There are following directories and files:
 - Implementing simplified polyline saving
 - Answering questions, which are mentioned in the presentation
 - Further research
+
+
+
 ![Screenshot from 2022-04-28 15-37-08_cut-photo ru (1)](https://user-images.githubusercontent.com/42346736/165828657-bb62d543-1519-451b-947e-f2bc57b1c19b.png)
