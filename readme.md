@@ -15,6 +15,9 @@ There are following directories and files:
 - *settings* - settings of developed applications
 - *data* - some additional data such as results of tests and dots of real cartographic objects
 - *presentation* - presentation for joint scientific seminar INM RAS - Huawei
+### Example of program's work
+
+![Screenshot from 2022-04-28 15-37-08_cut-photo ru (1)](https://user-images.githubusercontent.com/42346736/165828657-bb62d543-1519-451b-947e-f2bc57b1c19b.png)
 ### Future work
 - Implementing real-time scaling in graphical app (with simplification and without)
 - Implementing canvas movement for correct drawing of large polylines
@@ -23,7 +26,3 @@ There are following directories and files:
 - Implementing simplified polyline saving
 - Answering questions, which are mentioned in the presentation
 - Further research
-
-
-
-![Screenshot from 2022-04-28 15-37-08_cut-photo ru (1)](https://user-images.githubusercontent.com/42346736/165828657-bb62d543-1519-451b-947e-f2bc57b1c19b.png)
